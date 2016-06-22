@@ -1,5 +1,50 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    h1= title
+    p Welcome to #{title}
+
+    script(src='/wechat/static/js/jweixin-1.0.0.js')
+    script.
+        var signPackage = !{JSON.stringify(signPackage)};
+        wx.config({
+            debug: true,
+            appId: signPackage.appId,
+            timestamp: signPackage.timestamp,
+            nonceStr: signPackage.nonceStr,
+            signature: signPackage.signature,
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone'
+            ]
+        });
+
+        wx.ready(function () {
+            console.log('wx.ready');
+            wx.onMenuShareTimeline({
+                title: 'JS全栈微信开发实战', // 分享标题
+                link: window.location.href, // 分享链接
+                imgUrl: '',
+                success: function () {
+                    console.log('share success');
+                },
+                cancel: function () {
+                    console.log('share cancel');
+                }
+            });
+            wx.onMenuShareAppMessage({
+                title: 'JS全栈微信开发实战', // 分享标题
+                link: window.location.href, // 分享链接
+                imgUrl: '',
+                success: function () {
+                    console.log('share success');
+                },
+                cancel: function () {
+                    console.log('share cancel');
+                }
+            });
+        });
+
