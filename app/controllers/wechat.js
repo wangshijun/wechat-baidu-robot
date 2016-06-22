@@ -32,7 +32,7 @@ const config = {
 
 const handleWechatRequest = wechat(config, function (req, res, next) {
     const message = req.weixin;
-    console.log(message);
+    console.log(message, req.query);
 
     res.reply('hello');
 });
