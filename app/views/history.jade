@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    .weui_panel.weui_panel_access
+        .weui_panel_hd
+            h1= title
+        .weui_panel_bd
+            each conversation in conversations
+                if conversation.answer
+                    .weui_media_box.weui_media_text
+                        h4.weui_media_title= 'Q: ' + conversation.question
+                        p.weui_media_desc= 'A: ' + conversation.answer
+                        ul.weui_media_info
+                            li.weui_media_info_meta= '提问时间: ' + moment(conversation.createdAt).format('YYYY-MM-DD HH:mm')
+        a.weui_panel_ft(href='javascript:void(0);') 查看更多
+
+
