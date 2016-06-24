@@ -12,21 +12,22 @@ const menuItems = {
             "key": "conversation-history"
         },
         {
-            "type": "click",
+            "type": "view",
             "name": "随机问答",
-            "key": "conversation-random"
+            "url": "http://120.27.106.168/wechat/random"
         }
     ]
 };
 
-schedule.scheduleJob({ second: 0, minute: 0 }, function(){
-    console.log('about to sync menu items');
     doMenuSync();
-});
-
-setInterval(function () {
-    console.log(new Date());
-}, 2000);
+// schedule.scheduleJob({ second: 0, minute: 0 }, function(){
+//     console.log('about to sync menu items');
+//     doMenuSync();
+// });
+//
+// setInterval(function () {
+//     console.log(new Date());
+// }, 2000);
 
 function doMenuSync () {
     jssdk.getAccessToken(function (err, token) {
