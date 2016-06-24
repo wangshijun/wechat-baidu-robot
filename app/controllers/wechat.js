@@ -1,4 +1,5 @@
 const express = require('express');
+const lodash = require('lodash');
 const moment = require('moment');
 const mongoose = require('mongoose');
 const wechat = require('wechat');
@@ -15,22 +16,27 @@ module.exports = function (app) {
     app.use('/wechat', router);
 };
 
-router.get('/hello', function (req, res, next) {
-    jssdk.getSignPackage(`${baseUrl}${req.url}`, function (err, signPackage) {
+const getSignPackage = function (req, res, next) {
+    jssdk.getSignPackage(`${baseUrl}${req.originalUrl}`, function (err, signPackage) {
         if (err) {
             return next(err);
         }
 
-        // Jade Template
-        res.render('index', {
-            title: 'Hello Wechat from Aliyun ECS --> Express',
-            signPackage: signPackage,
-            pretty: true,
-        });
+        req.signPackage = signPackage;
+        next();
+    });
+};
+
+router.get('/hello', getSignPackage, function (req, res, next) {
+    // Jade Template
+    res.render('index', {
+        title: 'Hello Wechat from Aliyun ECS --> Express',
+        signPackage: req.signPackage,
+        pretty: true,
     });
 });
 
-router.get('/history/:userid', function (req, res, next) {
+router.get('/history/:userid', getSignPackage, function (req, res, next) {
     if (!req.params.userid) {
         return next(new Error('非法请求，缺少userid参数'));
     }
@@ -41,13 +47,14 @@ router.get('/history/:userid', function (req, res, next) {
         }
 
         console.log(`find user: ${user}`);
-        Conversation.find({ user }).exec(function (e, conversations) {
+        Conversation.find({ user }).sort('-createdAt').limit(20).exec(function (e, conversations) {
             if (e) {
                 return next(new Error('查找问答历史出错'));
             }
 
             res.render('history', {
                 user, conversations,
+                signPackage: req.signPackage,
                 moment: moment,
                 title: '问答历史',
                 pretty: true,
@@ -56,6 +63,22 @@ router.get('/history/:userid', function (req, res, next) {
         });
     });
 
+});
+
+router.get('/random', getSignPackage, function (req, res, next) {
+    Conversation.find().limit(100).exec(function (e, conversations) {
+        if (e) {
+            return next(new Error('查找随机问答出错'));
+        }
+
+        res.render('history', {
+            conversations: lodash.shuffle(conversations).slice(0, 20),
+            signPackage: req.signPackage,
+            moment: moment,
+            title: '随机问答',
+            pretty: true,
+        });
+    });
 });
 
 const config = {

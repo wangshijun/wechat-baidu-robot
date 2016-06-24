@@ -13,6 +13,7 @@
     "express": "^4.13.3",
     "glob": "^6.0.4",
     "jade": "^1.11.0",
+    "lodash": "^4.13.1",
     "method-override": "^2.3.0",
     "moment": "^2.13.0",
     "mongoose": "^4.1.2",

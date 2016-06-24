@@ -63,7 +63,7 @@ JSSDK.prototype = {
                         const data = JSON.parse(body);
 
                         intance.writeCacheFile(cacheFile, {
-                            expireTime: Math.round(Date.now() / 1000) + 7200,
+                            expireTime: Math.round(Date.now() / 1000) + 3600,
                             jsApiTicket: data.ticket,
                         });
 
@@ -101,7 +101,7 @@ JSSDK.prototype = {
                     const data = JSON.parse(body);
 
                     intance.writeCacheFile(cacheFile, {
-                        expireTime: Math.round(Date.now() / 1000) + 7200,
+                        expireTime: Math.round(Date.now() / 1000) + 3600,
                         accessToken: data.access_token,
                     });
 
